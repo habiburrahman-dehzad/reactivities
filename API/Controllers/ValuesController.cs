@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Linq;
 using Persistence;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
