@@ -1,7 +1,7 @@
 import React from 'react'
 import { Card, Image, Button } from 'semantic-ui-react'
 
-export const ActivityDetails = ({ activity, setEditMode, setSelectedActivity }) => {
+export const ActivityDetails = ({ activity, setEditMode, setSelectedActivity, submitting }) => {
     return (
         <Card fluid>
             <Image src={`/assets/categoryImages/${activity.category}.jpg`} wrapped ui={false} />
