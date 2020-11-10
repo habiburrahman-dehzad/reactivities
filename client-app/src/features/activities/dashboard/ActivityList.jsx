@@ -1,18 +1,16 @@
-import React from "react";
+import { observer } from "mobx-react-lite";
+import React, { useContext } from "react";
 import { Item, Button, Label, Segment } from 'semantic-ui-react';
+import ActivityStore from '../../../app/stores/activityStore';
 
-export const ActivityList = ({ 
-  activities, 
-  selectActivity, 
-  deleteActivity, 
-  submitting,
-  target 
-}) => {
+const ActivityList = () => {
+  const activityStore = useContext(ActivityStore);
+  const { activitiesByDate, selectActivity, deleteActivity, submitting, target } = activityStore;
   return (
     <Segment clearing>
       <Item.Group divided>
         {
-          activities.map((activity) => (
+          activitiesByDate.map((activity) => (
             <Item key={activity.id}>
               <Item.Content>
                 <Item.Header as="a">{activity.title}</Item.Header>
@@ -44,3 +42,5 @@ export const ActivityList = ({
     </Segment>
   );
 };
+
+export default observer(ActivityList);

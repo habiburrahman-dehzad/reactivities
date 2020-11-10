@@ -1,7 +1,11 @@
-import React from 'react'
-import { Card, Image, Button } from 'semantic-ui-react'
+import { observer } from 'mobx-react-lite';
+import React, { useContext } from 'react';
+import { Card, Image, Button } from 'semantic-ui-react';
+import ActivityStore from '../../../app/stores/activityStore';
 
-export const ActivityDetails = ({ activity, setEditMode, setSelectedActivity, submitting }) => {
+const ActivityDetails = () => {
+    const activityStore = useContext(ActivityStore);
+    const { selectedActivity: activity, openEditForm, cancelSelectActivity } = activityStore;
     return (
         <Card fluid>
             <Image src={`/assets/categoryImages/${activity.category}.jpg`} wrapped ui={false} />
@@ -16,10 +20,12 @@ export const ActivityDetails = ({ activity, setEditMode, setSelectedActivity, su
             </Card.Content>
             <Card.Content extra>
                 <Button.Group widths={2}>
-                    <Button onClick={() => setEditMode(true)} basic color='blue' content='Edit' />
-                    <Button onClick={() => setSelectedActivity(null)} basic color='grey' content='Cancel' />
+                    <Button onClick={() => openEditForm(activity.id)} basic color='blue' content='Edit' />
+                    <Button onClick={cancelSelectActivity} basic color='grey' content='Cancel' />
                 </Button.Group>
             </Card.Content>
         </Card>
     )
-}
+};
+
+export default observer(ActivityDetails);

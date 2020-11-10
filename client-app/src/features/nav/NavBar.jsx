@@ -1,7 +1,11 @@
-import React from 'react';
+import { observer } from 'mobx-react-lite';
+import React, { useContext } from 'react';
 import { Menu, Container, Button } from 'semantic-ui-react';
+import ActivityStore from '../../app/stores/activityStore';
 
-export const NavBar = ({openCreateForm}) => {
+const NavBar = () => {
+    const activityStore = useContext(ActivityStore);
+    const { openCreateForm } = activityStore;
     return (
         <Menu fixed='top' inverted>
             <Container>
@@ -18,4 +22,6 @@ export const NavBar = ({openCreateForm}) => {
             </Container>
         </Menu>
     )
-}
+};
+
+export default observer(NavBar);
