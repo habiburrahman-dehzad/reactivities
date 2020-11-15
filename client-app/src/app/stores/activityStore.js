@@ -7,6 +7,8 @@ import {
   runInAction,
 } from "mobx";
 import { createContext } from "react";
+import { toast } from "react-toastify";
+import { history } from "../..";
 import agent from "../api/agent";
 
 configure({ enforceActions: "always" });
@@ -43,11 +45,11 @@ class ActivityStore {
 
   groupActivitiesByDate(activities) {
     const sortedActivities = activities.sort(
-      (a, b) => Date.parse(a.date) - Date.parse(b.date)
+      (a, b) => a.date - b.date
     );
 
     return Object.entries(sortedActivities.reduce((activities, activity) => {
-      const date = activity.date.split('T')[0];
+      const date = activity.date.toISOString().split('T')[0];
       activities[date] = activities[date] ? [...activities[date], activity] : [activity];
       return activities;
     }, {}));
@@ -61,7 +63,7 @@ class ActivityStore {
 
       runInAction(() => {
         activities.forEach((activity) => {
-          activity.date = activity.date.split(".")[0];
+          activity.date = new Date(activity.date);
           this.activityRegistry.set(activity.id, activity);
           this.loadingInitial = false;
         });
@@ -80,6 +82,7 @@ class ActivityStore {
     let activity = this.getActivity(id);
     if (activity) {
       this.activity = activity;
+      return activity;
     } else {
       this.loadingInitial = true;
 
@@ -87,10 +90,14 @@ class ActivityStore {
         activity = await agent.Activities.details(id);
 
         runInAction(() => {
+            activity.date = new Date(activity.date);
             this.activity = activity;
+            this.activityRegistry.set(activity.id, activity);
             this.loadingInitial = false;
         });
-      } catch (error) {
+        return activity;
+      } 
+      catch (error) {
           runInAction(() => {
               this.loadingInitial = false;
           });
@@ -118,11 +125,14 @@ class ActivityStore {
         this.selectActivity = activity;
         this.submitting = false;
       });
-    } catch (error) {
+      history.push(`/activities/${activity.id}`);
+    } 
+    catch (error) {
       runInAction(() => {
         this.submitting = false;
       });
-      console.log(error);
+      toast.error(error.response.data.title);
+      console.log(error.response);
     }
   };
 
@@ -136,11 +146,14 @@ class ActivityStore {
         this.activity = activity;
         this.submitting = false;
       });
-    } catch (error) {
+      history.push(`/activities/${activity.id}`);
+    } 
+    catch (error) {
       runInAction(() => {
         this.submitting = false;
       });
-      console.log(error);
+      toast.error(error.response.data.title);
+      console.log(error.response);
     }
   };
 
