@@ -3,24 +3,23 @@ import {
   observable,
   computed,
   action,
-  configure,
   runInAction,
 } from "mobx";
-import { createContext } from "react";
 import { toast } from "react-toastify";
 import { history } from "../..";
 import agent from "../api/agent";
 
-configure({ enforceActions: "always" });
-
-class ActivityStore {
+export default class ActivityStore {
+  rootStore;
   activityRegistry = new Map();
   loadingInitial = false;
   activity = null;
   submitting = false;
   target = "";
 
-  constructor() {
+  constructor(rootStore) {
+    this.rootStore = rootStore;
+
     makeObservable(this, {
       activityRegistry: observable,
       loadingInitial: observable,
@@ -180,4 +179,3 @@ class ActivityStore {
   };
 }
 
-export default createContext(new ActivityStore());

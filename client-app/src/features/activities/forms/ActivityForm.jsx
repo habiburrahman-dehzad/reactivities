@@ -2,7 +2,6 @@ import React from "react";
 import { Segment, Form, Button, Grid } from "semantic-ui-react";
 import { useState } from "react";
 import { v4 as uuid } from "uuid";
-import ActivityStore from "../../../app/stores/activityStore";
 import { useContext } from "react";
 import { observer } from "mobx-react-lite";
 import { useEffect } from "react";
@@ -14,6 +13,7 @@ import { category } from "../../../app/common/options/categoryOptions";
 import DateInput from "../../../app/common/form/DateInput";
 import { combineDateAndTime } from "../../../app/common/util/utils";
 import { combineValidators, composeValidators, hasLengthGreaterThan, isRequired } from 'revalidate';
+import { RootStoreContext } from "../../../app/stores/rootStore";
 
 const validator = combineValidators({
   title: isRequired({message: 'The event title is required'}),
@@ -30,13 +30,13 @@ const validator = combineValidators({
 
 
 const ActivityForm = ({ match, history }) => {
-  const activityStore = useContext(ActivityStore);
+  const rootStore = useContext(RootStoreContext);
   const {
     submitting,
     loadActivity,
     createActivity,
     editActivity,
-  } = activityStore;
+  } = rootStore.activityStore;
 
   const [activity, setActivity] = useState({
     id: undefined,
