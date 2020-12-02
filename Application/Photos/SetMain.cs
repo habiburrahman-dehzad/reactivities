@@ -41,11 +41,6 @@ namespace Application.Photos
                         new { Photo = "Not found" });
                 }
 
-                if (photo.IsMain) {
-                    throw new RestException(HttpStatusCode.BadRequest, 
-                        new { Photo = "You can't delete your main photo" });
-                }
-
                 var currentMain = user.Photos.FirstOrDefault(x => x.IsMain);
                 
                 currentMain.IsMain = false;
