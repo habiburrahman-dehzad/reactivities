@@ -8,6 +8,7 @@ export default class ProfileStore {
     loadingProfile = true;
     uploadingPhoto = false;
     loading = false;
+    profileUpdating = false;
 
     constructor(rootStore) {
         this.rootStore = rootStore;
@@ -17,13 +18,15 @@ export default class ProfileStore {
             loadingProfile: observable,
             uploadingPhoto: observable,
             loading: observable,
+            profileUpdating: observable,
 
             isCurrentUser: computed,
 
             loadProfile: action,
             uploadPhoto: action,
             setMainPhoto: action,
-            deletePhoto: action
+            deletePhoto: action,
+            updateProfile: action
         });
     }
 
@@ -123,6 +126,28 @@ export default class ProfileStore {
 
             toast.error('Problem deleting the photo');
             console.log(error);
+        }
+    }
+
+    updateProfile = async (values) => {
+        this.profileUpdating = true;
+
+        try {
+            await agent.Profiles.updateProfile(values);
+            
+            runInAction(() => {
+                this.profile = {...this.profile, ...values};
+                this.rootStore.userStore.user = {...this.rootStore.userStore.user, ...values};
+                this.profileUpdating = false;
+            });
+        } 
+        catch (error) {
+            runInAction(() => {
+                this.profileUpdating = false;
+            });
+
+            console.log(error);
+            toast.error('Problem updating user profile');
         }
     }
 }

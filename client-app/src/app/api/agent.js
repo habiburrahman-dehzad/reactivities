@@ -74,7 +74,8 @@ const Profiles = {
     get: (username) => requests.get(`/profiles/${username}`),
     uploadPhoto: (photo) => requests.postForm(`/photos`, photo),
     setMainPhoto: (id) => requests.post(`/photos/${id}/setMain`, {}),
-    deletePhoto: (id) => requests.del(`/photos/${id}`)
+    deletePhoto: (id) => requests.del(`/photos/${id}`),
+    updateProfile: (values) => requests.put(`/profiles`, values)
 }
 
 export default {
