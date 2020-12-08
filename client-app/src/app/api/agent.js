@@ -2,7 +2,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { history } from "../..";
 
-axios.defaults.baseURL = "http://localhost:5000/api";
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
 axios.interceptors.request.use(
   (config) => {
@@ -23,11 +23,12 @@ axios.interceptors.response.use(undefined, (error) => {
     toast.error("Network error - check to make sure API is running!");
   }
 
-  const { status, data, config } = error.response;
+  const { status, data, config, headers } = error.response;
 
   if (status === 404) {
     history.push("/notfound");
   }
+
   if (
     status === 400 &&
     config.method === "get" &&
@@ -35,6 +36,16 @@ axios.interceptors.response.use(undefined, (error) => {
   ) {
     history.push("/notfound");
   }
+
+  if (status === 401 && 
+    headers['www-authenticate'] &&
+    headers['www-authenticate'].startsWith('Bearer error="invalid_token", error_description="The token expired at'))
+  {
+    window.localStorage.removeItem('jwt');
+    history.push('/');
+    toast.info('Your session has expired. Please login again');
+  }
+
   if (status === 500) {
     toast.error("Server error - check the terminal for more info!");
   }
@@ -44,11 +55,8 @@ axios.interceptors.response.use(undefined, (error) => {
 
 const responseBody = (response) => response.data;
 
-const sleep = (ms) => (response) =>
-  new Promise((resolve) => setTimeout(() => resolve(response), ms));
-
 const requests = {
-  get: (url) => axios.get(url).then(sleep(1000)).then(responseBody),
+  get: (url) => axios.get(url).then(responseBody),
   post: (url, body) => axios.post(url, body).then(responseBody),
   put: (url, body) => axios.put(url, body).then(responseBody),
   del: (url) => axios.delete(url).then(responseBody),
@@ -65,7 +73,7 @@ const requests = {
 
 const Activities = {
   list: (params) =>
-    axios.get('/activities', {params: params}).then(sleep(1000)).then(responseBody),
+    axios.get('/activities', {params: params}).then(responseBody),
   details: (id) => requests.get(`/activities/${id}`),
   create: (activity) => requests.post("/activities", activity),
   update: (activity) => requests.put(`/activities/${activity.id}`, activity),

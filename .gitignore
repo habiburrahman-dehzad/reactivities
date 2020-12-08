@@ -2,5 +2,5 @@ bin
 obj
 *.db
 .DS_Store
-.vscode
-appsettings.json
+wwwroot
+build

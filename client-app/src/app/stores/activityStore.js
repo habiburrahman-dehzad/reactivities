@@ -5,6 +5,7 @@ import {
   action,
   runInAction,
   reaction,
+  toJS,
 } from "mobx";
 import { toast } from "react-toastify";
 import { history } from "../..";
@@ -106,7 +107,7 @@ export default class ActivityStore {
 
   createHubConnection = () => {
     this.hubConnection = new HubConnectionBuilder()
-      .withUrl("http://localhost:5000/chat", {
+      .withUrl(process.env.REACT_APP_API_CHAT_URL, {
         accessTokenFactory: () => this.rootStore.commonStore.token,
       })
       .configureLogging(LogLevel.Information)
@@ -186,7 +187,7 @@ export default class ActivityStore {
     let activity = this.getActivity(id);
     if (activity) {
       this.activity = activity;
-      return activity;
+      return toJS(activity);
     } else {
       this.loadingInitial = true;
 
