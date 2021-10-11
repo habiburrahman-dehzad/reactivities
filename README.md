@@ -1,7 +1,7 @@
 # Reactivities
 
 This is a social networking app for sharing events and activities with friends.
-This application is build using:
+This application is built using:
 
 1. Asp.Net Core
 1. SqLite
