@@ -16,6 +16,8 @@ The client side application is built using [Create React App](https://github.com
 
 ## Running the application
 
+Before running the application you need to create a [Cloudinary] (https://cloudinary.com/) account and insert its API key and secret to the API/appsettings.json file.
+
 You can run the application by running the commands:
 
 # Running Backend:
