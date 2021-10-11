@@ -12,7 +12,7 @@
     <PackageReference Include="NWebsec.AspNetCore.Middleware" Version="3.0.0"/>
   </ItemGroup>
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>netcoreapp5.0</TargetFramework>
     <UserSecretsId>dec14f1d-c899-4e80-9f41-02cce7167265</UserSecretsId>
   </PropertyGroup>
 </Project>

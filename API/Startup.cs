@@ -84,9 +84,9 @@ namespace API
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
                 opt.Filters.Add(new AuthorizeFilter(policy));
             })
-                .AddFluentValidation(cfg => 
+                .AddFluentValidation(cfg =>
                 cfg.RegisterValidatorsFromAssemblyContaining<Create>());
-            
+
             services.AddControllers();
 
             var builder = services.AddIdentityCore<AppUser>();
@@ -102,7 +102,7 @@ namespace API
             services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"]));
-            
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(opt => {
                     opt.TokenValidationParameters = new TokenValidationParameters
@@ -117,7 +117,7 @@ namespace API
 
                     opt.Events = new JwtBearerEvents
                     {
-                        OnMessageReceived = context => 
+                        OnMessageReceived = context =>
                         {
                             var accessToken = context.Request.Query["access_token"];
                             var path = context.HttpContext.Request.Path;
@@ -143,7 +143,7 @@ namespace API
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseMiddleware<ErrorHandlingMiddleware>();
-            
+
             if (env.IsDevelopment())
             {
                 // app.UseDeveloperExceptionPage();
@@ -160,11 +160,11 @@ namespace API
                 .FormActions(s => s.Self())
                 .FrameAncestors(s => s.Self())
                 .ImageSources(s => s.Self().CustomSources("https://res.cloudinary.com", "blob:", "data:"))
-                .ScriptSources(s => s.Self())
+                //.ScriptSources(s => s.Self())
             );
 
             app.UseAuthentication();
-            
+
             // app.UseHttpsRedirection();
             app.UseDefaultFiles();
             app.UseStaticFiles();
